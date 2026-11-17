@@ -57,7 +57,27 @@
                     </div>
                   </div>
                   <!-- /.card-header -->
-                  <div class="card-body">Start creating your amazing application!</div>
+                  <div class="card-body">
+                <div class="d-flex gap-2 mb-3">
+                  <button id="export-csv" type="button" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-filetype-csv me-1" aria-hidden="true"></i>
+                    Export CSV
+                  </button>
+                  <button id="export-json" type="button" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-filetype-json me-1" aria-hidden="true"></i>
+                    Export JSON
+                  </button>
+                  <button id="print-table" type="button" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-printer me-1" aria-hidden="true"></i>
+                    Print
+                  </button>
+                </div>
+                <div id="users-table" aria-label="Users"></div>
+                <div
+                  id="table-pagination"
+                  class="d-flex flex-wrap gap-2 justify-content-end mt-2"
+                ></div>
+              </div>
                   <!-- /.card-body -->
                   <div class="card-footer">The footer of the card</div>
                   <!-- /.card-footer -->

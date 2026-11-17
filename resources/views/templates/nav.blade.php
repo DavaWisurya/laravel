@@ -1,3 +1,4 @@
+
       <!--begin::Header-->
       <nav class="app-header navbar navbar-expand bg-body">
         <!--begin::Container-->
@@ -430,6 +431,12 @@
                 <a href="./starter.html" class="nav-link active">
                   <i class="nav-icon bi bi-file-earmark"></i>
                   <p>Starter Page</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('products') }}" class="nav-link">
+                  <i class="nav-icon bi bi-circle"></i>
+                  <p>Products</p>
                 </a>
               </li>
               <li class="nav-item">
