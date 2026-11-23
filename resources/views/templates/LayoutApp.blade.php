@@ -102,6 +102,8 @@
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="{{ asset('assets/css/adminlte.css') }}" />
     <!--end::Required Plugin(AdminLTE)-->
+
+    @stack('style')
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -116,3 +118,9 @@
         <!--begin::App Content Header-->
       <!--end::App Main-->
       @include('templates.footer')
+      </div>
+
+      @stack('script')
+
+    </body>
+    </html>

@@ -12,7 +12,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::latest()->paginate(10);
-        return view('products.index', compact('products'));
+        return view('products.index');
+    }
+
+     public function apiData()
+    {
+        $products = \App\Models\Product::latest()->get();
+        return response()->json($products);
     }
 }

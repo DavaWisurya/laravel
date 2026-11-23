@@ -1,5 +1,10 @@
 @extends('templates.LayoutApp')
 
+@push('style')
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.6.1/dist/css/tabulator_bootstrap5.min.css"
+      crossorigin="anonymous" />
+@endpush
+
 @section('content')
 
 <div class="app-content-header">
@@ -91,6 +96,111 @@
           <!--end::Container-->
         </div>
         <!--end::App Content-->
-      </main>
 
 @endsection
+
+@push('script')
+   <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.6.1/dist/js/tabulator.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      const statusBadge = (cell) => {
+        const value = cell.getValue();
+        const map = { Active: 'success', Invited: 'info', Suspended: 'secondary' };
+        const color = map[value] || 'secondary';
+        return `<span class="badge text-bg-${color}">${value}</span>`;
+      };
+
+      document.addEventListener('DOMContentLoaded', () => {
+      const table = new Tabulator('#product-table'), {
+        ajaxURL: "{{route('products.api') }}", // Mengambil data langsung dari Route JSON Laravel,
+        layout: 'fitColumns',
+        filterMode: "local",
+        pagination: "local",
+        paginationElement: document.getElementById('table-pagination'),
+        paginationSize: 10,
+        paginationSizeSelector: [10, 25, 50, 100],
+        movableColumns: true,
+        columns: [{
+          title: '10',
+          field: 'id',
+          width: 80,
+          headerSort: true,
+        },
+      {
+        title: 'Product Name',
+        field: 'name',
+      },
+    {
+        title: 'Price',
+        field: 'price',
+    },
+  {
+        title: 'Stock',
+        field: 'stock',
+        width: 120,
+  },
+{
+        title: 'Aksi',
+        field: 'id',
+        formatter: function(cell) {
+          var id = cell.getValue();
+          var editUrl = "{{ url('products') }}/" + id + "/edit";
+
+          // Membuat tombol Edit dan Delete manual di dalam Tabulator
+          return
+          <a href="${editUrl}" class="btn btn-success">Edit</a>
+          <button onclick="deleteProduct(${id}" class="btn btn-danger">Hapus</button>;
+        },
+        headerSort: false,
+        borderless: true,
+
+        width: 200,
+        hozAlign: 'center',
+
+  }];
+
+  table.on('tableBuilt', () => {
+    // Keep the scroll region keyboard reachable inside a valid grid.
+    // Pagination lives outside the grid so its buttons are not grid rows.
+    const grid = document.getElementById('product-table');
+    grid.removeAttribute('aria-owns');
+    grid.querySelector('tabulator-tableholder').setAttribute('role', 'rowgroup');
+    grid.querySelector('tabulator-table').setAttribute('role', 'presentation');
+  });
+
+  table.on('renderComplete', () => {
+    document.querySelectorAll('#table-pagination button').forEach((button) => {
+      button.classList.add('btn', 'btn-sm', 'btn-outline-secondary');
+    });
+  });
+
+  document.getElementById('table-filter').addEventListener('input', (e) => {
+    const value = e.target.value;
+    if (value) {
+      table.setFilter(
+        [{
+          field: 'name',
+          type: 'like',
+          value: value
+        }, ]
+      );
+
+    } else {
+      table.clearfilter();
+    }
+  });
+
+  document
+      .getElementById('export-csv')
+      .addEventListener('click', () => table.download('csv', 'users.csv'));
+  document
+      .getElementById('export-json')
+      .addEventListener('click', () => table.download('json', 'users.json'));
+  document
+      .getElementById('print-table')
+      .addEventListener('click', () => table.print(false, true));
+
+})
+    </script> 
+@endpush
