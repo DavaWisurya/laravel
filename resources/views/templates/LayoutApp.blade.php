@@ -24,10 +24,12 @@
         } catch {
           // localStorage may be unavailable (private mode, sandboxed iframe).
         }
+
         // Mirror the precedence in color-mode.ts: the visitor's stored choice
         // wins, then a theme this page declared itself, then the OS preference.
         const authored = root.getAttribute('data-bs-theme');
         let resolved = 'light';
+
         if (stored === 'dark' || stored === 'light') {
           resolved = stored;
         } else if (authored === 'dark' || authored === 'light') {
@@ -35,8 +37,10 @@
         } else if (globalThis.matchMedia('(prefers-color-scheme: dark)').matches) {
           resolved = 'dark';
         }
+
         root.setAttribute('data-bs-theme', resolved);
         root.style.colorScheme = resolved;
+
         // Flag values computed here, so the bundle does not mistake them for a
         // theme the page declared and stop following the OS preference.
         if (resolved !== authored) {
@@ -103,24 +107,27 @@
     <link rel="stylesheet" href="{{ asset('assets/css/adminlte.css') }}" />
     <!--end::Required Plugin(AdminLTE)-->
 
-    @stack('style')
+    @stack('styles')
   </head>
   <!--end::Head-->
+
   <!--begin::Body-->
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
-        @include('templates.nav')
+      @include('templates.nav')
+
       <!--begin::App Main-->
       <main class="app-main">
         @yield('content')
-    </main>
-        <!--begin::App Content Header-->
+      </main>
       <!--end::App Main-->
+
+      @yield('modal')
       @include('templates.footer')
-      </div>
-
-      @stack('script')
-
-    </body>
-    </html>
+    </div>
+    @stack('script')
+    <!--end::App Wrapper-->
+  </body>
+  <!--end::Body-->
+</html>
