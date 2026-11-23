@@ -44,7 +44,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                   <h3 class="card-title">Data Products</h3>
 
-                  <button type="button" class="btn btn-primary">
+                  <button type="button" class="btn btn-primary"
                     data-bs-toggle="modal"
                     data-bs-target="#createProductModal">
                     <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>

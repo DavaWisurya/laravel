@@ -126,6 +126,7 @@
       @yield('modal')
       @include('templates.footer')
     </div>
+    <script src="{{ asset('assets/js/adminlte.js') }}"></script>
     @stack('script')
     <!--end::App Wrapper-->
   </body>
