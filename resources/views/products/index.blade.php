@@ -89,12 +89,6 @@
                         </div>
 
                         <div id="product-table" aria-label="Products"></div>
-
-                        <div
-                            id="table-pagination"
-                            class="d-flex flex-wrap gap-2 justify-content-end mt-2">
-                        </div>
-
                     </div>
                 </div>
 
@@ -118,15 +112,16 @@
 </script>
 
 <script>
+    let table;
+
     document.addEventListener('DOMContentLoaded', () => {
 
-        const table = new Tabulator('#product-table', {
+            table = new Tabulator('#product-table', {
             ajaxURL: "{{ route('products.api') }}",
             layout: 'fitColumns',
             filterMode: 'local',
             pagination: true,
             paginationMode: 'local',
-            paginationElement: document.getElementById('table-pagination'),
             paginationSize: 10,
             paginationSizeSelector: [10, 25, 50, 100],
             movableColumns: true,
@@ -135,8 +130,8 @@
                 {
                     title: 'ID',
                     field: 'id',
-                    width: 80,
-                    headerSort: true
+                    width: 40,
+                    headerSort: false,
                 },
                 {
                     title: 'Product Name',
@@ -156,10 +151,21 @@
                     field: 'id',
                     formatter: function(cell) {
                         var id = cell.getValue();
-                        var editUrl = "{{ url('products') }}/" + id + "/edit";
 
-                        return `<a href="${editUrl}" class="btn btn-success btn-sm">Edit</a>
-                        <button onclick="deleteProduct(${id})" class="btn btn-danger btn-sm">Hapus</button>`;
+                        return `
+                           <button type="button"
+                              class="btn btn-success btn-sm"
+                              onclick="editProduct(${id})">
+                              Edit
+                           </button>
+
+                           <button type="button"
+                               onclick="deleteProduct(${id})"
+                               class="btn btn-danger btn-sm">
+                               Hapus
+                          </button>
+        `;
+
                     },
                     headerSort: false,
                     width: 200,
@@ -195,6 +201,106 @@
             });
 
     });
+
+// add ons 1
+
+function editProduct(id) {
+    const row = table.getRow(id);
+
+    if (!row) {
+        alert('Product not found!');
+        return;
+    }
+
+    const data = row.getData();
+
+    document.getElementById('productForm').action =
+        `{{ ('products') }}/${id}`;
+        // `/products/${id}`; before
+
+    document.getElementById('methodField').disabled = false;
+
+    document.getElementById('createProductModalLabel').textContent =
+        'Edit Product';
+
+    document.getElementById('submitProduct').textContent =
+        'Update Product';
+
+    document.getElementById('name').value = data.name;
+    document.getElementById('price').value = data.price;
+    document.getElementById('stock').value = data.stock;
+    document.getElementById('description').value = data.description;
+
+    document.getElementById('image').value = '';
+
+    const modal = new bootstrap.Modal(
+        document.getElementById('createProductModal')
+    );
+
+    modal.show();
+}
+
+// add ons 2 --
+
+function resetProductForm() {
+    const form = document.getElementById('productForm');
+
+    form.reset();
+
+    form.action = "{{ route('products.store') }}";
+
+    document.getElementById('methodField').disabled = true;
+
+    document.getElementById('createProductModalLabel').textContent =
+        'Create Product';
+
+    document.getElementById('submitProduct').textContent =
+        'Save changes';
+}
+// add ons 3 --
+
+document.getElementById('createProductModal')
+    .addEventListener('show.bs.modal', function(event) {
+
+        // Jika modal dibuka melalui tombol Create
+        if (event.relatedTarget) {
+            resetProductForm();
+        }
+
+    });
+
+// add ons 4 --
+
+function deleteProduct(id) {
+    console.log('Delete clicked, ID:', id);
+
+    const confirmDelete = confirm(
+        'Are you sure you want to delete this product?'
+    );
+
+    if (!confirmDelete) {
+        return;
+    }
+
+    const csrfToken = document.querySelector(
+        '#productForm input[name="_token"]'
+    ).value;
+
+    const form = document.createElement('form');
+
+    form.method = 'POST';
+    form.action = `{{ url('products') }}/${id}`;
+    form.style.display = 'none';
+
+    form.innerHTML = `
+        <input type="hidden" name="_token" value="${csrfToken}">
+        <input type="hidden" name="_method" value="DELETE">
+    `;
+
+    document.body.appendChild(form);
+    form.submit();
+}
+
 </script>
 
 @endpush

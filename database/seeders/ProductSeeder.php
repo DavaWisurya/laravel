@@ -36,7 +36,7 @@ class ProductSeeder extends Seeder
         ]);
 
         {
-            product::factory()->count(50)->create();
+            product::factory()->count(20)->create();
             // membuat 50 data produk secara acak menggunakan factory
         }
     }
